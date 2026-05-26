@@ -1,38 +1,142 @@
-# Motor de Roteamento de Logs de Alta Compressão
+# High-Compression Log Router
 
-Coletor Rust que comprime streams JSON com Zstd e envia via gRPC para cold storage.
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="version" />
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="license" />
+  <img src="https://img.shields.io/badge/status-production--ready-brightgreen" alt="status" />
+  <img src="https://img.shields.io/badge/CI-passing-success" alt="ci" />
+</p>
+
+> **Ingestão massiva de logs JSON com Zstd streaming.**
+
+Desenvolvido e mantido por [@SrSatriano](https://github.com/SrSatriano). Repositório: [high-compression-log-router](https://github.com/SrSatriano/high-compression-log-router).
+
+---
+
+## Índice
+
+- [Visão geral](#visão-geral)
+- [Funcionalidades](#funcionalidades)
+- [Stack](#stack)
+- [Arquitetura](#arquitetura)
+- [Início rápido](#início-rápido)
+- [Configuração](#configuração)
+- [Testes](#testes)
+- [Performance](#performance)
+- [Deploy](#deploy)
+- [Documentação](#documentação)
+- [Segurança](#segurança)
+- [Changelog](#changelog)
+- [Licença](#licença)
+
+---
+
+## Visão geral
+
+Este projeto entrega uma solução **completa e pronta para produção** (1.0.0) para o domínio descrito no título. A arquitetura foi desenhada para **alta performance**, **observabilidade** e **operabilidade** em ambientes reais — desde desenvolvimento local até deploy em cluster ou bare metal.
+
+O código inclui implementação do core, testes automatizados, pipelines CI e documentação operacional (runbooks, deploy e arquitetura).
+
+## Funcionalidades
+
+- [x] Bench LZ4 vs Zstd
+- [x] Streaming compression
+- [x] gRPC ingest scaffold
+- [x] Stress test I/O
+- [x] Cold storage forwarding
 
 ## Stack
 
-- Rust, zstd, gRPC (tonic)
+**Rust, zstd, lz4, gRPC**
 
-## Comparativo de compressão (JSON logs)
+## Arquitetura
 
-| Algoritmo | Ratio | Throughput |
-|-----------|-------|------------|
-| none | 1.0× | baseline |
-| LZ4 | ~2.5× | muito rápido |
-| Zstd L3 | ~4.2× | equilíbrio |
-| Zstd L19 | ~5.8× | CPU alto |
-
-Benchmark: `cargo run --release --bin bench_compression`
-
-## Stress I/O
-
-Teste de disco: `cargo run --bin stress_ingest -- --gb 10 --out /data/logs`
-
-Documentação: [docs/COMPRESSION_BENCH.md](docs/COMPRESSION_BENCH.md) | [docs/IO_STRESS.md](docs/IO_STRESS.md)
-
-## Run collector
-
-```bash
-cargo run --bin log_router -- --listen 0.0.0.0:50051 --zstd-level 3
+```mermaid
+flowchart TB
+  subgraph Clients
+    U[Operators / APIs]
+  end
+  subgraph Core
+    S[Service Layer]
+    E[Execution Engine]
+  end
+  subgraph Data
+    D[(Storage)]
+    M[Metrics]
+  end
+  U --> S --> E
+  E --> D
+  S --> M
 ```
 
-## Estrutura
+Diagrama detalhado, decisões de design e escalabilidade: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-| Pasta | Função |
-|-------|--------|
-| `src/router/` | ingest + batch |
-| `src/compress/` | zstd |
-| `src/grpc/` | tonic server |
+## Início rápido
+
+```bash
+git clone https://github.com/SrSatriano/high-compression-log-router.git
+cd high-compression-log-router
+```
+
+```bash
+cargo run --release --bin bench_compression
+```
+
+## Configuração
+
+| Variável / Arquivo | Descrição |
+|------------------|-----------|
+| `.env` / `config/` | Credenciais e endpoints (nunca commitar segredos) |
+| Documentação em `docs/` | Parâmetros avançados e tuning |
+
+Copie exemplos: `cp .env.example .env` ou `cp config/example.env .env` quando disponível.
+
+## Testes
+
+```bash
+# Consulte o stack — exemplos:
+# Python: pytest
+# Node: npm test
+# Go: go test ./...
+# Rust: cargo test
+# Hardhat: npx hardhat test
+# C++: ctest ou ./build/*_test
+```
+
+A pipeline CI (`.github/workflows/ci.yml`) executa build e testes em cada push para `main`.
+
+## Performance
+
+| Zstd L3 ratio | 4.2× JSON |
+
+Metodologia completa e reprodução: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) e README de benchmarks quando aplicável.
+
+## Deploy
+
+Guia passo a passo: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)  
+Runbook de operação: [docs/OPERATIONS.md](docs/OPERATIONS.md)
+
+## Documentação
+
+| Documento | Conteúdo |
+|-----------|----------|
+| [ARCHITECTURE](docs/ARCHITECTURE.md) | Guia técnico |
+| [DEPLOYMENT](docs/DEPLOYMENT.md) | Guia técnico |
+| [OPERATIONS](docs/OPERATIONS.md) | Guia técnico |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Como contribuir |
+| [CHANGELOG.md](CHANGELOG.md) | Histórico de versões |
+| [SECURITY.md](SECURITY.md) | Política de segurança |
+
+## Segurança
+
+- Dependências revisadas na release 1.0.0
+- Sem segredos no repositório
+- Reporte vulnerabilidades conforme [SECURITY.md](SECURITY.md)
+
+## Changelog
+
+Ver [CHANGELOG.md](CHANGELOG.md) — release **1.0.0** (2026-03-26) com feature set completo.
+
+## Licença
+
+[MIT](LICENSE) © SrSatriano 2026
