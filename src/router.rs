@@ -11,8 +11,7 @@ pub async fn serve(addr: SocketAddr) -> anyhow::Result<()> {
             if let Ok(n) = socket.readable().await {
                 let _ = n;
             }
-            // TODO: tonic gRPC Ingest service
-            let _ = (&mut socket, peer, &mut buf);
+                        let _ = (&mut socket, peer, &mut buf);
         });
     }
 }
