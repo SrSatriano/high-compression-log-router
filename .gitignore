@@ -1,0 +1,15 @@
+﻿node_modules/
+__pycache__/
+*.pyc
+.venv/
+target/
+build/
+.env
+.env.local
+*.pem
+.DS_Store
+.idea/
+.vscode/
+output/
+reports/*.md
+!reports/.gitkeep
