@@ -1,25 +1,36 @@
-﻿# Changelog
+# Changelog
 
-## [1.0.0] - 2026-03-26
+Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 
-### Added
-- ImplementaÃ§Ã£o completa da arquitetura documentada no README
-- SuÃ­te de testes automatizados e pipeline CI
-- Guias de deploy, operaÃ§Ã£o e troubleshooting em `docs/`
+Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
-### Performance
-- Benchmarks publicados e reproduzÃ­veis na documentaÃ§Ã£o
+## [1.0.0] — 2026-03-26
 
-### Security
-- PolÃ­tica de seguranÃ§a (SECURITY.md) e revisÃ£o de dependÃªncias
+### Adicionado
 
-## [0.9.0] - 2026-02-15
+- Documentação completa em português brasileiro (README e `docs/`)
+- Implementação do núcleo descrito no README
+- Suíte de testes: `cargo test`
+- Pipeline CI em `.github/workflows/ci.yml`
 
-### Added
-- Release candidate com API/contratos congelados
-- Testes de carga em homologaÃ§Ã£o
+### Desempenho
 
-## [0.1.0] - 2026-01-10
+- Benchmarks documentados no README e em `docs/ARCHITECTURE.md`
 
-### Added
-- Estrutura inicial e prova de conceito
+### Segurança
+
+- Política em [SECURITY.md](SECURITY.md)
+- Revisão de dependências na release 1.0.0
+
+## [0.9.0] — 2026-02-15
+
+### Adicionado
+
+- Release candidate com contratos de API estáveis
+- Testes de carga em homologação
+
+## [0.1.0] — 2026-01-10
+
+### Adicionado
+
+- Estrutura inicial do repositório e prova de conceito
